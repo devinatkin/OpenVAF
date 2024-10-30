@@ -312,7 +312,7 @@ impl Ieee64 {
         f64::from_bits(self.0).is_finite()
     }
 
-    /// Check if the value is 0.0 or -0.0
+    /// Check if the value is +0.0 or -0.0
     /// (note that other values have a 0 mantissa!)
     pub fn is_zero(self) -> bool {
         self.0 == 0x0000000000000000 || self.0 == 0x8000000000000000
