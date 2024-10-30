@@ -609,7 +609,7 @@ impl<'a> Builder<'a> {
         let hi = self.ensure_unknown(hi);
         let lo = lo.map(|lo| self.ensure_unknown(lo));
         self.system.noise_sources.extend(contrib.noise.iter().map(|src| {
-            NoiseSource { name: src.name, kind: src.kind.clone(), hi, lo, src.factor }
+            NoiseSource { name: src.name, kind: src.kind.clone(), hi, lo, factor: src.factor }
         }))
     }
 
