@@ -22,7 +22,7 @@ jobs:
             target: aarch64-unknown-linux-gnu
 
     env:
-      LLVM_VERSION: "15"               # Keep this in one place
+      LLVM_VERSION: "16"
       CARGO_TERM_COLOR: always
 
     steps:
@@ -54,7 +54,8 @@ jobs:
 
       - name: Build OpenVAF (release)
         run: |
-          cargo build --release --target ${{ matrix.target }}
+            export LLVM_CONFIG=/usr/bin/llvm-config-${LLVM_VERSION}
+            cargo build --release --target ${{ matrix.target }}
 
       - name: Create Debian package
         run: |
