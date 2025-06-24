@@ -39,6 +39,7 @@ jobs:
           sudo apt-get update
           # Core dependencies for every architecture
           sudo apt-get install -y clang-${LLVM_VERSION} llvm-${LLVM_VERSION}-dev zstd
+          sudo apt-get install -y llvm-dev llvm
           # Extra bits for cross-compiling to arm64 on an amd64 runner
           if [ "${{ matrix.arch }}" = "arm64" ]; then
             sudo apt-get install -y gcc-aarch64-linux-gnu libc6-dev-arm64-cross
