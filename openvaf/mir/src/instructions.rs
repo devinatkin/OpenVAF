@@ -96,6 +96,7 @@ impl InstructionData {
 
     /// Get mutable references to the value arguments to this
     /// instruction.
+    #[allow(elided_named_lifetimes)]
     pub fn arguments<'a>(&'a self, pool: &'a ValueListPool) -> &[Value] {
         match self {
             InstructionData::Unary { arg, .. } | InstructionData::Branch { cond: arg, .. } => {

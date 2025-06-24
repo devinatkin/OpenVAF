@@ -126,6 +126,7 @@ impl Function {
         res
     }
 
+    #[allow(elided_named_lifetimes)]
     pub fn print<'a>(&'a self, resolver: &'a dyn lasso::Resolver) -> PrintableFunction {
         PrintableFunction { fun: self, resolver }
     }
