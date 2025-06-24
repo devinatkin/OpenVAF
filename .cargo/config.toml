@@ -26,6 +26,8 @@ rustflags = [
     # "-Ctarget-cpu=native",
     "-Clink-arg=-fuse-ld=lld",
     # "-Clink-arg=-Wl,--no-rosegment",
+
+    "-Aelided_named_lifetimes"
 ]
 
 [alias]
