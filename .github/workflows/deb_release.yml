@@ -1,0 +1,63 @@
+name: Build Debian packages
+
+on:
+  push:
+    # Build only on version tags (v1.2.3, v0.7.0-beta.1, …)
+    tags:
+      - 'v*'
+  workflow_dispatch:        # Allow manual runs
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch:
+          - amd64
+          - arm64
+        include:
+          - arch: amd64
+            target: x86_64-unknown-linux-gnu
+          - arch: arm64
+            target: aarch64-unknown-linux-gnu
+
+    env:
+      LLVM_VERSION: "15"               # Keep this in one place
+      CARGO_TERM_COLOR: always
+
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: actions/setup-rust@v1
+        with:
+          # Use the stable channel (>= 1.64) and add the cross-target
+          rust-version: stable
+          target: ${{ matrix.target }}
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          # Core dependencies for every architecture
+          sudo apt-get install -y clang-${LLVM_VERSION} llvm-${LLVM_VERSION}-dev zstd cargo-deb
+          # Extra bits for cross-compiling to arm64 on an amd64 runner
+          if [ "${{ matrix.arch }}" = "arm64" ]; then
+            sudo apt-get install -y gcc-aarch64-linux-gnu libc6-dev-arm64-cross
+          fi
+
+      - name: Build OpenVAF (release)
+        run: |
+          cargo build --release --target ${{ matrix.target }}
+
+      - name: Create Debian package
+        run: |
+          cargo deb --no-build \
+                   --target ${{ matrix.target }} \
+                   --output openvaf_${{ github.ref_name }}_${{ matrix.arch }}.deb
+
+      - name: Upload artefact
+        uses: actions/upload-artifact@v4
+        with:
+          name: openvaf-${{ matrix.arch }}
+          path: openvaf_${{ github.ref_name }}_${{ matrix.arch }}.deb
