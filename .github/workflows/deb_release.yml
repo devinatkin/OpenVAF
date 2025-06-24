@@ -30,11 +30,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Rust toolchain
-        uses: actions/setup-rust@v1
+        uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
-          # Use the stable channel (>= 1.64) and add the cross-target
-          rust-version: stable
-          target: ${{ matrix.target }}
+            target: ${{ matrix.target }}
 
       - name: Install build dependencies
         run: |
